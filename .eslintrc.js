@@ -18,6 +18,9 @@ module.exports = {
   "rules": {
     "spaced-comment": 0,
     "no-underscore-dangle": 0,
-    "trailing-comma": 0
+    "trailing-comma": 0,
+    "linebreak-style": 0,
+    "react/require-default-props": 0,
+    "react/forbid-prop-types": 0
   }
 };

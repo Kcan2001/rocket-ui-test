@@ -1,9 +1,29 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components'
 import ConnectedView from './ConnectedView';
-import {fetchLaunchesIfNeeded} from "../actions/Launches";
-import Launch from '../components/Launch';
+import {fetchLaunchesIfNeeded, showCardModal, hideCardModal} from "../actions/Launches";
+
+import CardModal from '../components/CardModal';
+import LaunchCard from '../components/LaunchCard';
+
+const CardGrid = styled.div`
+     display: block;
+
+    @media (min-width: 768px) {
+      justify-content: center;
+      display: flex;
+      flex-wrap: wrap;
+  }
+`;
 
 class LaunchesView extends Component {
+  static propTypes = {
+    dispatch: PropTypes.func,
+    launchesCollection: PropTypes.object,
+    launchCollection: PropTypes.object
+  }
+
   componentDidMount() {
     const { dispatch, launchesCollection } = this.props;
     fetchLaunchesIfNeeded({ dispatch, launchesCollection });
@@ -20,21 +40,27 @@ class LaunchesView extends Component {
       return <div> NO DATA </div>;
     }
 
-    let launches = [];
-
-    for (let i = 0; i < launchCollection.launches.length; i++) {
-      const launch = launchCollection.launches[i];
-
-      launches.push(
-        <Launch {...{
-          key: launch.launch_id,
-          launch
-        }} />
-
-      )
+    if (launchCollection.modal.active) {
+      return <CardModal handleCloseClick={() => this.handleCloseClick()} item={launchCollection.modal.data}/>;
     }
 
-    return <ul>{launches}</ul>;
+      return (
+        <CardGrid>
+          {launchCollection.launches.map((item) => <LaunchCard key={item.id} handleCardClick={() => this.handleCardClick(item)} launch={item}/>)}
+        </CardGrid>
+      )
+  }
+
+  handleCloseClick = () => {
+    const { dispatch } = this.props;
+
+    hideCardModal({dispatch});
+  }
+
+  handleCardClick = (item) => {
+    const { dispatch } = this.props;
+
+    showCardModal({dispatch, item});
   }
 
   render() {

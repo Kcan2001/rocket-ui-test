@@ -34,7 +34,7 @@ module.exports = {
   module: {
     rules: [
       { // handle images
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|jpg|gif)$/,
         use: {
           loader: "file-loader"
         }
@@ -45,6 +45,10 @@ module.exports = {
           'style-loader',
           'css-loader'
         ]
+      },
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
       },
       { // handle sass
         test: /\.sass$/,
